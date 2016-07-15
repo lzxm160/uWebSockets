@@ -275,6 +275,11 @@ void WebSocket::onReadable(uv_poll_t *p, int status, int events)
 
 void WebSocket::initPoll(Server *server, uv_os_sock_t fd, void *ssl, void *perMessageDeflate)
 {
+    if (fd == -1) {
+        std::cerr << "PASSED FD = -1" << std::endl << std::flush;
+        exit(0);
+    }
+
     uv_poll_init_socket(server->loop, p, fd);
     SocketData *socketData = new SocketData;
     socketData->pmd = (PerMessageDeflate *) perMessageDeflate;
