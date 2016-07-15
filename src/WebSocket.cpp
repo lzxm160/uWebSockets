@@ -289,6 +289,12 @@ void WebSocket::initPoll(Server *server, uv_os_sock_t fd, void *ssl, void *perMe
     }
 
     p->data = socketData;
+
+    if (uv_is_closing((uv_handle *) p)) {
+        std::cerr << "THIS SHOULD NOT HAPPEN" << std::endl;
+        exit(0);
+    }
+
     uv_poll_start(p, UV_READABLE, onReadable);
 }
 
