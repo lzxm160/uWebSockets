@@ -503,6 +503,13 @@ void WebSocket::write(char *data, size_t length, bool transferOwnership, void(*c
             messagePtr->callbackData = callbackData;
             ((SocketData *) p->data)->messageQueue.push(messagePtr);
 
+            // debug info
+            if (uv_is_closing((uv_handle_t *) p)) {
+                std::cerr << "ERROR: WebSocket::write, messageQueue.push(messagePtr)" << std::endl;
+                exit(0);
+                return;
+            }
+
             // only start this if we just broke the 0 queue size!
             uv_poll_start(p, UV_WRITABLE | UV_READABLE, [](uv_poll_t *handle, int status, int events) {
 
@@ -568,8 +575,17 @@ void WebSocket::write(char *data, size_t length, bool transferOwnership, void(*c
                                 }
                             }
 
+                            // debug info
+                            if (uv_is_closing((uv_handle_t *) handle)) {
+                                std::cerr << "ERROR: WebSocket::write, UV_WRITABLE | UV_READABLE, sent = -1" << std::endl;
+                                exit(0);
+                                return;
+                            } else {
+                                uv_poll_start(handle, UV_READABLE, onReadable);
+                            }
+
                             // error sending!
-                            uv_poll_start(handle, UV_READABLE, onReadable);
+                            //uv_poll_start(handle, UV_READABLE, onReadable);
                             return;
                         } else {
                             // update the Message
@@ -580,8 +596,18 @@ void WebSocket::write(char *data, size_t length, bool transferOwnership, void(*c
                     }
                 } while (!socketData->messageQueue.empty());
 
+
+                // debug info
+                if (uv_is_closing((uv_handle_t *) handle)) {
+                    std::cerr << "ERROR: WebSocket::write, UV_WRITABLE | UV_READABLE, messageQueue.empty()" << std::endl;
+                    exit(0);
+                    return;
+                } else {
+                    uv_poll_start(handle, UV_READABLE, onReadable);
+                }
+
                 // only receive when we have fully sent everything
-                uv_poll_start(handle, UV_READABLE, onReadable);
+                //uv_poll_start(handle, UV_READABLE, onReadable);
             });
         }
     }
