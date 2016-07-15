@@ -291,7 +291,7 @@ void WebSocket::initPoll(Server *server, uv_os_sock_t fd, void *ssl, void *perMe
     p->data = socketData;
 
     if (uv_is_closing((uv_handle *) p)) {
-        std::cerr << "THIS SHOULD NOT HAPPEN" << std::endl;
+        std::cerr << "THIS SHOULD NOT HAPPEN" << std::endl << std::flush;
         exit(0);
     }
 
@@ -358,7 +358,7 @@ void WebSocket::close(bool force, unsigned short code, char *data, size_t length
         // call disconnection callback on first close (graceful or force)
         socketData->server->disconnectionCallback(p, code, data, length);
     } else if (!force) {
-        std::cerr << "WARNING: Already gracefully closed: " << p << std::endl;
+        std::cerr << "WARNING: Already gracefully closed: " << p << std::endl << std::flush;
         return;
     }
 
@@ -511,7 +511,7 @@ void WebSocket::write(char *data, size_t length, bool transferOwnership, void(*c
 
             // debug info
             if (uv_is_closing((uv_handle_t *) p)) {
-                std::cerr << "ERROR: WebSocket::write, messageQueue.push(messagePtr)" << std::endl;
+                std::cerr << "ERROR: WebSocket::write, messageQueue.push(messagePtr)" << std::endl << std::flush;
                 exit(0);
                 return;
             }
@@ -583,7 +583,7 @@ void WebSocket::write(char *data, size_t length, bool transferOwnership, void(*c
 
                             // debug info
                             if (uv_is_closing((uv_handle_t *) handle)) {
-                                std::cerr << "ERROR: WebSocket::write, UV_WRITABLE | UV_READABLE, sent = -1" << std::endl;
+                                std::cerr << "ERROR: WebSocket::write, UV_WRITABLE | UV_READABLE, sent = -1" << std::endl << std::flush;
                                 exit(0);
                                 return;
                             } else {
@@ -605,7 +605,7 @@ void WebSocket::write(char *data, size_t length, bool transferOwnership, void(*c
 
                 // debug info
                 if (uv_is_closing((uv_handle_t *) handle)) {
-                    std::cerr << "ERROR: WebSocket::write, UV_WRITABLE | UV_READABLE, messageQueue.empty()" << std::endl;
+                    std::cerr << "ERROR: WebSocket::write, UV_WRITABLE | UV_READABLE, messageQueue.empty()" << std::endl << std::flush;
                     exit(0);
                     return;
                 } else {
