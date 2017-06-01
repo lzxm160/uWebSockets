@@ -26,4 +26,4 @@ install (TARGETS uWS DESTINATION /usr/lib64)
 install (FILES src/EventSystem.h src/Server.h src/WebSocket.h src/uWS.h DESTINATION /usr/include/uWS)
 endif (UNIX)
 
-add_subdirectory(examples)
+add_subdirectory(project)
