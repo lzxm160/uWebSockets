@@ -1,0 +1,6 @@
+set OPENSSL_ROOT_DIR=C:\OpenSSL-Win64
+
+echo %OPENSSL_ROOT_DIR%
+
+set ZLIB_LIBRARY=C:\zlib-1.2.11\Release
+set ZLIB_INCLUDE_DIR=C:\zlib-1.2.11
